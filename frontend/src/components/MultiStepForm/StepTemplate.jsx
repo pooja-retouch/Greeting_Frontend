@@ -4,6 +4,7 @@ export default function StepTemplate({
   selectedTemplate,
   setSelectedTemplate,
   onBack,
+  onFinish, // Add this prop!
 }) {
   const templates = [
     {
@@ -49,8 +50,9 @@ export default function StepTemplate({
 
         <button
           disabled={!selectedTemplate}
+          onClick={onFinish} // Add onClick handler here!
           className={`px-4 py-2 rounded text-white ${
-            selectedTemplate ? "bg-primary" : "bg-gray-300"
+            selectedTemplate ? "bg-primary cursor-pointer" : "bg-gray-300 cursor-not-allowed"
           }`}
         >
           Finish
