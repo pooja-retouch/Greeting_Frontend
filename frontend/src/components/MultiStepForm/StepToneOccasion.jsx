@@ -1,31 +1,68 @@
 import React from "react";
+import { apiRequest } from "../../api/apiClient";
 
 export default function StepToneOccasion({
   tone,
   setTone,
   occasion,
   setOccasion,
+  messageType,
+  recipients,
   onNext,
   onBack,
   setGeneratedMessage,
 }) {
-  function generateMessage() {
-    const baseMessage =
-      occasion === "New Year"
-        ? "Wishing you a joyful and successful New Year ahead!"
-        : occasion === "Christmas"
-        ? "Merry Christmas! May your holiday season be full of joy!"
-        : "Warmest Season’s Greetings to you and your loved ones!";
+  async function generateMessage() {
+    try {
+      console.log("Calling AI API for message generation...");
 
-    const tonePrefix =
-      tone === "Warm"
-        ? "Sending warm wishes, "
-        : tone === "Funny"
-        ? "Here's a cheerful laugh with your greeting, "
-        : "With sincere regards, ";
+      // Get recipient name
+      const recipientName = recipients && recipients[0] && recipients[0].name ? recipients[0].name : null;
 
-    setGeneratedMessage(`${tonePrefix}${baseMessage}`);
-    onNext();
+      console.log("🔄 About to make API call with data:", { occasion, tone, details: `Create a ${messageType} message for ${occasion} in a ${tone.toLowerCase()} tone.`, recipient_name: recipientName });
+
+      const response = await apiRequest("/ai/generate-gemini", "POST", {
+        occasion,
+        tone,
+        details: `Create a ${messageType} message for ${occasion} in a ${tone.toLowerCase()} tone.`,
+        recipient_name: recipientName,
+      });
+
+      console.log("✅ API Response received:", response);
+      console.log("✅ Message from response:", response.message);
+
+      if (!response || !response.message) {
+        throw new Error("Invalid response format from API");
+      }
+
+      console.log("✅ API Success - Setting message and calling onNext():", response.message);
+      setGeneratedMessage(response.message);
+      console.log("✅ About to call onNext()");
+      setTimeout(() => {
+        console.log("▶️ Executing onNext() now");
+        onNext();
+      }, 100); // Small delay to ensure state update completes
+    } catch (error) {
+      console.error("❌ API Error:", error);
+      // Fallback to template if API fails
+      const baseMessage =
+        occasion === "New Year"
+          ? "Wishing you a joyful and successful New Year ahead!"
+          : occasion === "Christmas"
+          ? "Merry Christmas! May your holiday season be full of joy!"
+          : "Warmest Season's Greetings to you and your loved ones!";
+
+      const tonePrefix =
+        tone === "Warm"
+          ? "Sending warm wishes, "
+          : tone === "Funny"
+          ? "Here's a cheerful laugh with your greeting, "
+          : "With sincere regards, ";
+
+      setGeneratedMessage(`${tonePrefix}${baseMessage}`);
+      console.log("ℹ️ Using fallback message due to API failure");
+      setTimeout(() => onNext(), 100); // Small delay to ensure state update completes
+    }
   }
 
   return (

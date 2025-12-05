@@ -1,7 +1,24 @@
-import React from "react";
+import React, { useState } from "react";
 
 export default function StepSender({ sender, setSender, onNext }) {
-  const canContinue = sender.name && sender.email && sender.whatsapp;
+  const [emailError, setEmailError] = useState("");
+
+  const validateEmail = (email) => {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return emailRegex.test(email);
+  };
+
+  const handleEmailChange = (email) => {
+    setSender({ ...sender, email });
+
+    if (email && !validateEmail(email)) {
+      setEmailError("Please enter a valid email address");
+    } else {
+      setEmailError("");
+    }
+  };
+
+  const canContinue = sender.name?.trim() && sender.email && validateEmail(sender.email);
 
   return (
     <div className="space-y-6">
@@ -25,23 +42,17 @@ export default function StepSender({ sender, setSender, onNext }) {
             Your Email Address
           </label>
           <input
-            className="w-full p-4 bg-white/80 border border-blue-200 rounded-2xl shadow-sm focus:ring-4 focus:ring-[#B8C2FF] outline-none text-lg placeholder:text-slate-400"
+            type="email"
+            className={`w-full p-4 bg-white/80 border rounded-2xl shadow-sm focus:ring-4 focus:ring-[#B8C2FF] outline-none text-lg placeholder:text-slate-400 ${
+              emailError ? "border-red-300 focus:ring-red-200" : "border-blue-200"
+            }`}
             placeholder="example@email.com"
             value={sender.email}
-            onChange={(e) => setSender({ ...sender, email: e.target.value })}
+            onChange={(e) => handleEmailChange(e.target.value)}
           />
-        </div>
-
-        <div>
-          <label className="block text-sm font-medium text-slate-600 mb-1">
-            Your WhatsApp Number
-          </label>
-          <input
-            className="w-full p-4 bg-white/80 border border-blue-200 rounded-2xl shadow-sm focus:ring-4 focus:ring-[#B8C2FF] outline-none text-lg placeholder:text-slate-400"
-            placeholder="+1 234 567 8900"
-            value={sender.whatsapp}
-            onChange={(e) => setSender({ ...sender, whatsapp: e.target.value })}
-          />
+          {emailError && (
+            <p className="mt-1 text-sm text-red-600">{emailError}</p>
+          )}
         </div>
       </div>
 

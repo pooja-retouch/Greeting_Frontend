@@ -1,28 +1,44 @@
-import React from "react";
+import React, { useState } from "react";
+import { getTemplatesByOccasion } from "../../config/templateConfig";
 
 export default function StepTemplate({
   selectedTemplate,
   setSelectedTemplate,
   onBack,
-  onNext,   // 🔵 MAKE SURE THIS PROP IS RECEIVED
+  onNext,
+  message,
+  occasion = "New Year",
 }) {
-  const templates = [
-    {
-      id: 1,
-      title: "Classic",
-      img: "https://via.placeholder.com/300x180.png?text=Classic+Card",
-    },
-    {
-      id: 2,
-      title: "Modern",
-      img: "https://via.placeholder.com/300x180.png?text=Modern+Card",
-    },
-    {
-      id: 3,
-      title: "Festive",
-      img: "https://via.placeholder.com/300x180.png?text=Festive+Card",
-    },
-  ];
+  const [previewTemplate, setPreviewTemplate] = useState(null);
+
+  console.log("🎨 StepTemplate rendered with message:", message, "occasion:", occasion);
+
+  // Get ALL templates - no filtering by occasion
+  const templates = getTemplatesByOccasion("all");
+
+  const TemplatePreview = ({ templateImg, isSelected }) => (
+    <div className="relative rounded-lg overflow-hidden cursor-pointer hover:scale-105 transition-transform">
+      {/* Clean Template Image - No overlays */}
+      <img
+        src={templateImg}
+        alt="Template"
+        className="w-full h-40 object-cover rounded-lg"
+        onError={(e) => {
+          console.log("Template image failed to load:", templateImg);
+          e.target.src = `https://via.placeholder.com/300x200/4F46E5/FFFFFF?text=No+Image+Yet`;
+        }}
+      />
+
+      {/* Selection Indicator */}
+      {isSelected && (
+        <div className="absolute inset-0 bg-green-500/20 border-2 border-green-500 rounded-lg flex items-center justify-center">
+          <div className="bg-green-500 text-white rounded-full w-6 h-6 flex items-center justify-center text-sm">
+            ✓
+          </div>
+        </div>
+      )}
+    </div>
+  );
 
   return (
     <div>
@@ -39,12 +55,11 @@ export default function StepTemplate({
                 ? "border-[#002D89] shadow-md"
                 : "border-blue-200"
             }`}
-            onClick={() => setSelectedTemplate(t.id)}
+            onClick={() => setPreviewTemplate(t)} // Open preview modal instead of selecting
           >
-            <img
-              src={t.img}
-              alt={t.title}
-              className="rounded-lg w-full object-cover"
+            <TemplatePreview
+              templateImg={t.img}
+              isSelected={selectedTemplate === t.id}
             />
             <p className="text-center mt-3 font-semibold text-slate-700">
               {t.title}
@@ -52,6 +67,55 @@ export default function StepTemplate({
           </div>
         ))}
       </div>
+
+      {/* Template Preview Modal */}
+      {previewTemplate && (
+        <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+          <div className="bg-white rounded-3xl p-6 max-w-2xl w-full max-h-[80vh] overflow-hidden shadow-2xl">
+            {/* Close button */}
+            <div className="flex justify-between items-center mb-4">
+              <h4 className="text-xl font-bold text-slate-800">{previewTemplate.title}</h4>
+              <button
+                onClick={() => setPreviewTemplate(null)}
+                className="text-slate-400 hover:text-slate-600 text-2xl"
+              >
+                ×
+              </button>
+            </div>
+
+            {/* Template Preview */}
+            <div className="flex justify-center mb-6">
+              <img
+                src={previewTemplate.img}
+                alt={previewTemplate.title}
+                className="max-w-full max-h-80 rounded-2xl shadow-lg"
+                onError={(e) => {
+                  e.target.src = `https://via.placeholder.com/600x400/4F46E5/FFFFFF?text=Template+Preview`;
+                }}
+              />
+            </div>
+
+            {/* Action buttons */}
+            <div className="flex gap-3 justify-center">
+              <button
+                onClick={() => {
+                  setSelectedTemplate(previewTemplate.id);
+                  setPreviewTemplate(null);
+                }}
+                className="px-6 py-3 bg-gradient-to-r from-[#000F3A] via-[#001B5E] to-[#002D89] text-white rounded-xl font-semibold hover:opacity-90 transition"
+              >
+                Choose This Template
+              </button>
+              <button
+                onClick={() => setPreviewTemplate(null)}
+                className="px-6 py-3 border-2 border-slate-300 text-slate-600 rounded-xl font-semibold hover:bg-slate-50 transition"
+              >
+                Cancel
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
 
       <div className="flex justify-between mt-8">
         <button

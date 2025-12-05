@@ -1,10 +1,97 @@
 import React, { useState, useEffect } from "react";
-import Navbar from "../components/Navbar";
 import { Link } from "react-router-dom";
 
 export default function About() {
   const [aiQuotes, setAiQuotes] = useState([]);
   const [loadingQuotes, setLoadingQuotes] = useState(true);
+  const [currentTeamMember, setCurrentTeamMember] = useState(0);
+
+  // Team members data
+  const teamMembers = [
+    {
+      name: "Gautam Nair",
+      role: "Founder & Creator",
+      department: "AI & Software Engineer",
+      specialty: "🧠 Lead Developer",
+      image: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&h=400&fit=crop&crop=face",
+      primaryColor: "#3B82F6",
+      bgColor: "#DBEAFE",
+      textColor: "#1E40AF",
+      description: "Created groundbreaking AI-powered greeting card technology and leads the technical vision behind Greetin's innovative platform."
+    },
+    {
+      name: "Sarah Johnson",
+      role: "AI Specialist",
+      department: "Machine Learning Engineer",
+      specialty: "🤖 AI Training",
+      image: "https://images.unsplash.com/photo-1494790108755-2616b619724aa?w=400&h=400&fit=crop&crop=face",
+      primaryColor: "#10B981",
+      bgColor: "#D1FAE5",
+      textColor: "#047857",
+      description: "Expert in machine learning algorithms that power Greetin's intelligent message generation and AI personalization features."
+    },
+    {
+      name: "Michael Chen",
+      role: "UI/UX Designer",
+      department: "Frontend Developer",
+      specialty: "🎨 Design & UX",
+      image: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=400&h=400&fit=crop&crop=face",
+      primaryColor: "#8B5CF6",
+      bgColor: "#E9D5FF",
+      textColor: "#7C3AED",
+      description: "Passionate about creating beautiful, intuitive interfaces that make greeting card creation a delightful experience for all users."
+    },
+    {
+      name: "Emily Rodriguez",
+      role: "Content Curator",
+      department: "Creative Writer",
+      specialty: "✍️ Content Creation",
+      image: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=400&h=400&fit=crop&crop=face",
+      primaryColor: "#EC4899",
+      bgColor: "#FCE7F3",
+      textColor: "#DB2777",
+      description: "Crafting heartfelt message templates and ensuring every greeting card created through Greetin conveys genuine care and emotion."
+    },
+    {
+      name: "David Kim",
+      role: "Backend Engineer",
+      department: "Full Stack Developer",
+      specialty: "⚙️ Backend & API",
+      image: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=400&h=400&fit=crop&crop=face",
+      primaryColor: "#6366F1",
+      bgColor: "#E0E7FF",
+      textColor: "#4338CA",
+      description: "Building robust backend systems and APIs that ensure Greetin's AI generation works seamlessly and reliably for millions of users."
+    },
+    {
+      name: "Lisa Thompson",
+      role: "Customer Success",
+      department: "User Experience Expert",
+      specialty: "💝 User Support",
+      image: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=400&h=400&fit=crop&crop=face",
+      primaryColor: "#EA580C",
+      bgColor: "#FED7AA",
+      textColor: "#C2410C",
+      description: "Ensuring every user has a smooth, joyful experience with Greetin, providing support and continuously improving the platform."
+    }
+  ];
+
+  // Auto-swipe functionality
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCurrentTeamMember((prev) => (prev + 1) % teamMembers.length);
+    }, 5000); // 5 seconds
+
+    return () => clearInterval(interval);
+  }, [teamMembers.length]);
+
+  // Get current team member
+  const getCurrentTeamMember = () => teamMembers[currentTeamMember];
+
+  // Reset auto-swipe timer
+  const resetAutoSwipe = () => {
+    // Reset logic here - the auto-swipe will continue from the new position
+  };
 
   // AI-generated sample quotes
   const sampleQuotes = [
@@ -34,8 +121,6 @@ export default function About() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-[#E3F2FF] via-[#F0F7FF] to-[#E3F2FF]">
-      <Navbar />
-      
       <div className="max-w-6xl mx-auto px-6 py-16">
         {/* Hero Section */}
         <div className="text-center mb-16">
@@ -239,47 +324,107 @@ export default function About() {
           </div>
         </div>
 
-        {/* How We Keep It Free */}
-        <div className="bg-gradient-to-r from-blue-50 to-white rounded-3xl p-8 border border-blue-200 mb-20">
-          <div className="text-center mb-8">
-            <h2 className="text-3xl font-bold text-slate-800 mb-4">How We Keep It Free</h2>
+        {/* Credits & Team */}
+        <div className="mb-20">
+          <div className="text-center mb-12">
+            <div className="inline-flex items-center gap-2 px-6 py-2 bg-gradient-to-r from-green-500 to-blue-500 text-white rounded-full text-sm font-bold mb-4">
+              👏 OUR TEAM
+            </div>
+            <h2 className="text-3xl font-bold text-slate-800 mb-4">Meet The People Behind Greetin</h2>
             <p className="text-lg text-slate-600 max-w-2xl mx-auto">
-              You might wonder how we can offer such a service completely free. Here's our approach:
+              The talented team that built this AI-powered greeting card platform
             </p>
           </div>
-          
-          <div className="grid md:grid-cols-2 gap-8">
-            <div className="p-6 bg-white rounded-2xl border border-blue-200">
-              <h3 className="text-xl font-bold text-slate-800 mb-4">Efficient Technology</h3>
-              <p className="text-slate-600 mb-4">
-                We use modern, efficient technology that keeps our costs minimal. 
-                Our lean approach means we can serve millions without the high expenses 
-                of traditional greeting card companies.
-              </p>
-              <div className="flex items-center gap-2 text-blue-600">
-                <span className="text-xl">⚡</span>
-                <span className="font-semibold">Lightning fast & cost-effective</span>
+
+          {/* Team Carousel */}
+          <div className="relative bg-white/70 backdrop-blur-sm rounded-3xl p-8 border border-blue-200 shadow-2xl max-w-2xl mx-auto mb-16">
+            {/* Current Team Member Display */}
+            <div className="text-center mb-8">
+              <div className="w-40 h-40 rounded-full border-6 border-gradient-to-r from-blue-500 to-purple-500 p-1 mx-auto mb-6 shadow-2xl">
+                <img
+                  src={getCurrentTeamMember().image}
+                  alt={getCurrentTeamMember().name}
+                  className="w-full h-full rounded-full object-cover"
+                />
               </div>
+
+              <h3 className="text-3xl font-bold text-slate-800 mb-2">{getCurrentTeamMember().name}</h3>
+              <p className="text-xl font-semibold mb-1" style={{ color: getCurrentTeamMember().primaryColor }}>
+                {getCurrentTeamMember().role}
+              </p>
+              <p className="text-slate-500 mb-4">{getCurrentTeamMember().department}</p>
+
+              <div className="inline-block px-4 py-2 rounded-full text-sm font-semibold mb-4"
+                   style={{
+                     backgroundColor: getCurrentTeamMember().bgColor,
+                     color: getCurrentTeamMember().textColor
+                   }}>
+                {getCurrentTeamMember().specialty}
+              </div>
+
+              <p className="text-slate-600 max-w-md mx-auto">{getCurrentTeamMember().description}</p>
             </div>
-            
-            <div className="p-6 bg-white rounded-2xl border border-blue-200">
-              <h3 className="text-xl font-bold text-slate-800 mb-4">Focus on Essentials</h3>
-              <p className="text-slate-600 mb-4">
-                Instead of adding unnecessary features that increase costs, 
-                we focus on what matters most: creating beautiful, meaningful 
-                greeting cards that people actually want to send.
-              </p>
-              <div className="flex items-center gap-2 text-green-600">
-                <span className="text-xl">🎯</span>
-                <span className="font-semibold">Focused on core features</span>
+
+            {/* Carousel Indicators */}
+            <div className="flex justify-center space-x-2 mb-4">
+              {teamMembers.map((_, index) => (
+                <button
+                  key={index}
+                  onClick={() => {
+                    setCurrentTeamMember(index);
+                    resetAutoSwipe();
+                  }}
+                  className={`w-3 h-3 rounded-full transition-all duration-300 ${
+                    index === currentTeamMember ? 'bg-blue-500 scale-125' : 'bg-blue-300'
+                  }`}
+                />
+              ))}
+            </div>
+
+            {/* Manual Navigation */}
+            <div className="flex justify-between items-center">
+              <button
+                onClick={() => {
+                  const newIndex = currentTeamMember === 0 ? teamMembers.length - 1 : currentTeamMember - 1;
+                  setCurrentTeamMember(newIndex);
+                  resetAutoSwipe();
+                }}
+                className="p-3 rounded-full bg-slate-100 hover:bg-slate-200 transition-colors"
+              >
+                <span className="text-2xl text-slate-600">‹</span>
+              </button>
+
+              <div className="text-center">
+                <p className="text-sm text-slate-500">
+                  Meet our team • Auto-advancing every 4 seconds
+                </p>
+                <p className="text-xs text-slate-400 mt-1">
+                  {currentTeamMember + 1} of {teamMembers.length}
+                </p>
               </div>
+
+              <button
+                onClick={() => {
+                  const newIndex = currentTeamMember === teamMembers.length - 1 ? 0 : currentTeamMember + 1;
+                  setCurrentTeamMember(newIndex);
+                  resetAutoSwipe();
+                }}
+                className="p-3 rounded-full bg-slate-100 hover:bg-slate-200 transition-colors"
+              >
+                <span className="text-2xl text-slate-600">›</span>
+              </button>
             </div>
           </div>
-          
-          <div className="mt-8 p-6 bg-gradient-to-r from-green-50 to-blue-50 rounded-2xl border border-green-200 text-center">
-            <p className="text-lg font-semibold text-green-800">
-              💝 Our promise to you: Greetin will always be free. No plans to charge, ever.
-            </p>
+
+          <div className="text-center">
+            <div className="inline-block p-6 bg-gradient-to-r from-green-50 to-blue-50 rounded-2xl border border-green-200">
+              <p className="text-lg font-semibold text-green-800 mb-2">
+                🎉 Thank You to Our Amazing Team!
+              </p>
+              <p className="text-green-600">
+                Behind Greetin is a talented team of passionate creators bringing joy and connection to people worldwide, completely free.
+              </p>
+            </div>
           </div>
         </div>
 

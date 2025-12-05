@@ -1,4 +1,4 @@
-const BASE_URL = "http://127.0.0.1:8000"; // FastAPI backend URL
+const BASE_URL = "http://localhost:8000"; // FastAPI backend URL
 
 export async function apiRequest(endpoint, method = "GET", body = null, token = null) {
   const headers = {
@@ -20,7 +20,9 @@ export async function apiRequest(endpoint, method = "GET", body = null, token = 
   }
 
   try {
-    const response = await fetch(`${BASE_URL}${endpoint}`, options);
+    const url = `${BASE_URL}${endpoint}`;
+    console.log(`Making API request to: ${url}`, method, body);
+    const response = await fetch(url, options);
 
     // If FastAPI returns an error
     if (!response.ok) {
@@ -35,7 +37,7 @@ export async function apiRequest(endpoint, method = "GET", body = null, token = 
 
     return await response.json();
   } catch (error) {
-    console.error("API Error:", error.message);
+    console.error("API Error:", error.message, error);
     throw error;
   }
 }

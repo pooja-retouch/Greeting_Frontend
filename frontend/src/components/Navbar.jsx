@@ -13,7 +13,6 @@ export default function Navbar() {
           <Link to="/" className="hover:text-[#001B5E] transition">Home</Link>
           <Link to="/about" className="hover:text-[#001B5E] transition">About</Link>
           <Link to="/contact" className="hover:text-[#001B5E] transition">Contact</Link>
-          <Link to="/sent-cards" className="hover:text-[#001B5E] transition">Sent Cards</Link>
         </div>
       </div>
     </nav>
