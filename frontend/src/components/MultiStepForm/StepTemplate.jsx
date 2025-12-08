@@ -1,20 +1,25 @@
 import React, { useState } from "react";
 import { getTemplatesByOccasion } from "../../config/templateConfig";
+import { useFullscreenEdit } from "../../context/FullscreenEditContext";
 
 export default function StepTemplate({
   selectedTemplate,
   setSelectedTemplate,
   onBack,
-  onNext,
   message,
   occasion = "New Year",
 }) {
   const [previewTemplate, setPreviewTemplate] = useState(null);
+  const { enterFullscreenEdit } = useFullscreenEdit();
 
   console.log("🎨 StepTemplate rendered with message:", message, "occasion:", occasion);
 
-  // Get ALL templates - no filtering by occasion
-  const templates = getTemplatesByOccasion("all");
+  // Get templates for the selected occasion
+  const templates = getTemplatesByOccasion(occasion);
+
+  // Debug logging
+  console.log("🎨 Available templates for", occasion, ":", templates.length, "templates");
+  console.log("🎨 Template list:", templates.map(t => t.title));
 
   const TemplatePreview = ({ templateImg, isSelected }) => (
     <div className="relative rounded-lg overflow-hidden cursor-pointer hover:scale-105 transition-transform">
@@ -42,9 +47,15 @@ export default function StepTemplate({
 
   return (
     <div>
-      <h3 className="text-2xl font-semibold text-slate-800">
-        Choose a Template
-      </h3>
+      <div className="mb-6">
+        <h3 className="text-2xl font-semibold text-slate-800">
+          Choose a Template
+        </h3>
+        <p className="text-lg font-medium text-slate-600 mt-2 capitalize">
+          🎄 Showing templates for: <span className="text-[#001B5E] font-bold">{occasion}</span>
+          <span className="text-sm text-slate-500 ml-2">({templates.length} available)</span>
+        </p>
+      </div>
 
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 mt-8">
         {templates.map((t) => (
@@ -127,14 +138,24 @@ export default function StepTemplate({
 
         <button
           disabled={!selectedTemplate}
-          onClick={onNext}   // 🔵 THIS TRIGGERS THE SUCCESS STEP
+          onClick={() => {
+            if (selectedTemplate) {
+              const selectedTemplateData = templates.find(t => t.id === selectedTemplate);
+              enterFullscreenEdit({
+                selectedTemplate: selectedTemplateData,
+                message,
+                occasion,
+                // Add other data needed for editing
+              });
+            }
+          }}
           className={`px-6 py-3 rounded-xl text-white font-semibold shadow-md transition ${
             selectedTemplate
               ? "bg-gradient-to-r from-[#000F3A] via-[#001B5E] to-[#002D89] hover:opacity-90"
               : "bg-slate-300 cursor-not-allowed"
           }`}
         >
-          Finish
+          Start Editing 🎨
         </button>
       </div>
     </div>

@@ -1,5 +1,4 @@
 import React from "react";
-import Navbar from "../components/Navbar";
 import MultiStepForm from "../components/MultiStepForm/MultiStepForm";
 import TestimonialsSlider from "../components/MultiStepForm/TestimonialsSlider";
 import { Link } from "react-router-dom";

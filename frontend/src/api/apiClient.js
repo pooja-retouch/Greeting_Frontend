@@ -41,3 +41,47 @@ export async function apiRequest(endpoint, method = "GET", body = null, token = 
     throw error;
   }
 }
+
+/**
+ * Generate a greeting message using AI
+ */
+export async function generateGreeting(occasion, tone, details, recipientName, regenerate = false) {
+  return apiRequest("/ai/generate-gemini", "POST", {
+    occasion,
+    tone,
+    details,
+    recipient_name: recipientName,
+    regenerate,
+  });
+}
+
+/**
+ * Generate a greeting card image
+ */
+export async function generateCard(occasion, tone, details, name, template) {
+  return apiRequest("/ai/generate-card", "POST", {
+    occasion,
+    tone,
+    details,
+    name,
+    template,
+  });
+}
+
+/**
+ * Send greeting card via email
+ */
+export async function sendGreeting(senderName, senderEmail, recipientEmail, recipientName, occasion, tone, details, template, message = null, message_position = null) {
+  return apiRequest("/ai/send-greeting", "POST", {
+    sender_name: senderName,
+    sender_email: senderEmail,
+    recipient_email: recipientEmail,
+    recipient_name: recipientName,
+    occasion,
+    tone,
+    details,
+    template,
+    message,
+    message_position,
+  });
+}
