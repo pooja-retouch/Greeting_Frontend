@@ -1,4 +1,4 @@
-import React, { useState, useRef, useCallback } from "react";
+import React, { useState, useRef, useCallback, useEffect } from "react";
 import { getTemplateConfig } from "../../config/templateConfig";
 import { sendGreeting } from "../../api/apiClient";
 import { useFullscreenEdit } from "../../context/FullscreenEditContext";
@@ -11,7 +11,16 @@ export default function InteractiveTemplateEditor({
   onPositionUpdate,
   onCardGenerated
 }) {
-  const templateInfo = getTemplateConfig(occasion, selectedTemplate);
+  const [templateInfo, setTemplateInfo] = useState(null);
+
+  // Load template config with force refresh to get latest URL
+  useEffect(() => {
+    const loadTemplate = async () => {
+      const config = await getTemplateConfig(occasion, selectedTemplate);
+      setTemplateInfo(config);
+    };
+    loadTemplate();
+  }, [occasion, selectedTemplate]);
   const containerRef = useRef(null);
   const { exitFullscreenEdit } = useFullscreenEdit();
 
@@ -225,14 +234,23 @@ export default function InteractiveTemplateEditor({
         onMouseLeave={handleMouseUp}
       >
         {/* Template Image */}
-        <img
-          src={templateInfo.img}
-          alt="Greeting Card Template"
-          className="w-full h-auto"
-          onError={(e) => {
-            e.target.src = `https://via.placeholder.com/600x400/4F46E5/FFFFFF?text=Template+Image`;
-          }}
-        />
+        {templateInfo ? (
+          <img
+            src={templateInfo.img}
+            alt="Greeting Card Template"
+            className="w-full h-auto"
+            onError={(e) => {
+              console.log("Template image failed to load in editor:", templateInfo.img);
+              // Fallback to a simple colored background instead of external placeholder
+              e.target.src = "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAwIiBoZWlnaHQ9IjQwMCIgdmlld0JveD0iMCAwIDYwMCA0MDAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSI2MDAiIGhlaWdodD0iNDAwIiBmaWxsPSIjNEY0NkU1Ii8+Cjx0ZXh0IHg9IjUwJSIgeT0iNTAlIiBmb250LWZhbWlseT0iQXJpYWwsc2Fucy1zZXJpZiIgZm9udC1zaXplPSIyNCIgZmlsbD0iI0ZGRkZGRiIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZHk9Ii4zZW0iPk5vIFRlbXBsYXRlIEltYWdlPC90ZXh0Pgo8c3ZnPg==";
+            }}
+          />
+        ) : (
+          // Loading placeholder
+          <div className="w-full h-96 bg-gray-300 rounded-2xl flex items-center justify-center">
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500"></div>
+          </div>
+        )}
 
         {/* Interactive Message Box */}
         <div

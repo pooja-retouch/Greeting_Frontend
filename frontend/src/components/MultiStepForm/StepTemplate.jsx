@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { getTemplatesByOccasion } from "../../config/templateConfig";
 import { useFullscreenEdit } from "../../context/FullscreenEditContext";
 
@@ -8,14 +8,34 @@ export default function StepTemplate({
   onBack,
   message,
   occasion = "New Year",
+  sender,
 }) {
   const [previewTemplate, setPreviewTemplate] = useState(null);
+  const [templates, setTemplates] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
   const { enterFullscreenEdit } = useFullscreenEdit();
 
   console.log("🎨 StepTemplate rendered with message:", message, "occasion:", occasion);
 
-  // Get templates for the selected occasion
-  const templates = getTemplatesByOccasion(occasion);
+  // Load templates for the selected occasion
+  useEffect(() => {
+    const loadTemplates = async () => {
+      setIsLoading(true);
+      console.log("🎨 Loading templates for occasion:", occasion);
+      try {
+        const occasionTemplates = await getTemplatesByOccasion(occasion);
+        console.log("🎨 Loaded templates:", occasionTemplates.length);
+        setTemplates(occasionTemplates);
+      } catch (error) {
+        console.error("Error loading templates:", error);
+        setTemplates([]);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    loadTemplates();
+  }, [occasion]);
 
   // Debug logging
   console.log("🎨 Available templates for", occasion, ":", templates.length, "templates");
@@ -30,7 +50,8 @@ export default function StepTemplate({
         className="w-full h-40 object-cover rounded-lg"
         onError={(e) => {
           console.log("Template image failed to load:", templateImg);
-          e.target.src = `https://via.placeholder.com/300x200/4F46E5/FFFFFF?text=No+Image+Yet`;
+          // Fallback to a simple colored background instead of external placeholder
+          e.target.src = "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMzAwIiBoZWlnaHQ9IjIwMCIgdmlld0JveD0iMCAwIDMwMCAyMDAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSIzMDAiIGhlaWdodD0iMjAwIiBmaWxsPSIjNEY0NkU1Ii8+Cjx0ZXh0IHg9IjUwJSIgeT0iNTAlIiBmb250LWZhbWlseT0iQXJpYWwsc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxNCIgZmlsbD0iI0ZGRkZGRiIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZHk9Ii4zZW0iPk5vIEltYWdlIFlldDwvdGV4dD4KPHN2Zz4=";
         }}
       />
 
@@ -58,25 +79,36 @@ export default function StepTemplate({
       </div>
 
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 mt-8">
-        {templates.map((t) => (
-          <div
-            key={t.id}
-            className={`border rounded-2xl p-4 cursor-pointer shadow-sm bg-white/70 backdrop-blur-sm hover:shadow-xl hover:scale-[1.02] transition-all ${
-              selectedTemplate === t.id
-                ? "border-[#002D89] shadow-md"
-                : "border-blue-200"
-            }`}
-            onClick={() => setPreviewTemplate(t)} // Open preview modal instead of selecting
-          >
-            <TemplatePreview
-              templateImg={t.img}
-              isSelected={selectedTemplate === t.id}
-            />
-            <p className="text-center mt-3 font-semibold text-slate-700">
-              {t.title}
-            </p>
+        {isLoading ? (
+          <div className="col-span-full text-center py-12">
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500 mx-auto mb-4"></div>
+            <p className="text-gray-600">Loading templates...</p>
           </div>
-        ))}
+        ) : templates.length === 0 ? (
+          <div className="col-span-full text-center py-12">
+            <p className="text-gray-500">No templates available for {occasion}.</p>
+          </div>
+        ) : (
+          templates.map((t) => (
+            <div
+              key={t.id}
+              className={`border rounded-2xl p-4 cursor-pointer shadow-sm bg-white/70 backdrop-blur-sm hover:shadow-xl hover:scale-[1.02] transition-all ${
+                selectedTemplate === t.id
+                  ? "border-[#002D89] shadow-md"
+                  : "border-blue-200"
+              }`}
+              onClick={() => setPreviewTemplate(t)} // Open preview modal instead of selecting
+            >
+              <TemplatePreview
+                templateImg={t.img}
+                isSelected={selectedTemplate === t.id}
+              />
+              <p className="text-center mt-3 font-semibold text-slate-700">
+                {t.title}
+              </p>
+            </div>
+          ))
+        )}
       </div>
 
       {/* Template Preview Modal */}
@@ -101,7 +133,9 @@ export default function StepTemplate({
                 alt={previewTemplate.title}
                 className="max-w-full max-h-80 rounded-2xl shadow-lg"
                 onError={(e) => {
-                  e.target.src = `https://via.placeholder.com/600x400/4F46E5/FFFFFF?text=Template+Preview`;
+                  console.log("Preview template image failed to load:", previewTemplate.img);
+                  // Fallback to a simple colored background instead of external placeholder
+                  e.target.src = "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAwIiBoZWlnaHQ9IjQwMCIgdmlld0JveD0iMCAwIDYwMCA0MDAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSI2MDAiIGhlaWdodD0iNDAwIiBmaWxsPSIjNEY0NkU1Ii8+Cjx0ZXh0IHg9IjUwJSIgeT0iNTAlIiBmb250LWZhbWlseT0iQXJpYWwsc2Fucy1zZXJpZiIgZm9udC1zaXplPSIyNCIgZmlsbD0iI0ZGRkZGRiIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZHk9Ii4zZW0iPk5vIEltYWdlIEF2YWlsYWJsZTwvdGV4dD4KPHN2Zz4=";
                 }}
               />
             </div>
@@ -145,6 +179,7 @@ export default function StepTemplate({
                 selectedTemplate: selectedTemplateData,
                 message,
                 occasion,
+                sender,
                 // Add other data needed for editing
               });
             }

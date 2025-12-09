@@ -77,6 +77,7 @@ export default function MultiStepForm() {
           onBack={() => setStep(5)}
           message={generatedMessage}
           occasion={occasion}
+          sender={sender}
         />
       )}
     </div>

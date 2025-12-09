@@ -12,68 +12,185 @@ export default function About() {
       name: "Gautam Nair",
       role: "",
       department: "AI & Software Engineer",
-      specialty: "🧠 Lead Developer",
-      image: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&h=400&fit=crop&crop=face",
+      
+      image: "/assets/credit_images/gautam.jpg",
       primaryColor: "#3B82F6",
       bgColor: "#DBEAFE",
       textColor: "#1E40AF",
       description: "Created groundbreaking AI-powered greeting card technology and leads the technical vision behind Greetin's innovative platform."
     },
     {
-      name: "Sarah Johnson",
+      name: "Bheema Kiran ",
       role: "AI Specialist",
       department: "Machine Learning Engineer",
       specialty: "🤖 AI Training",
-      image: "https://images.unsplash.com/photo-1494790108755-2616b619724aa?w=400&h=400&fit=crop&crop=face",
+      image: "/assets/credit_images/bheem.jpg",
       primaryColor: "#10B981",
       bgColor: "#D1FAE5",
       textColor: "#047857",
       description: "Expert in machine learning algorithms that power Greetin's intelligent message generation and AI personalization features."
     },
     {
-      name: "Michael Chen",
+      name: "Bharat Kumar",
       role: "UI/UX Designer",
       department: "Frontend Developer",
       specialty: "🎨 Design & UX",
-      image: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=400&h=400&fit=crop&crop=face",
+      image: "/assets/credit_images/bharat.jpg",
       primaryColor: "#8B5CF6",
       bgColor: "#E9D5FF",
       textColor: "#7C3AED",
       description: "Passionate about creating beautiful, intuitive interfaces that make greeting card creation a delightful experience for all users."
     },
     {
-      name: "Emily Rodriguez",
-      role: "Content Curator",
-      department: "Creative Writer",
-      specialty: "✍️ Content Creation",
-      image: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=400&h=400&fit=crop&crop=face",
+      name: "vigneesh Sridhar",
+      role: "Frontend developer",
+      image: "/assets/credit_images/vigneesh.jpg",
       primaryColor: "#EC4899",
       bgColor: "#FCE7F3",
       textColor: "#DB2777",
       description: "Crafting heartfelt message templates and ensuring every greeting card created through Greetin conveys genuine care and emotion."
     },
     {
-      name: "David Kim",
-      role: "Backend Engineer",
+      name: "Pooja Koti ",
+      role: "Frontend Developer",
       department: "Full Stack Developer",
       specialty: "⚙️ Backend & API",
-      image: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=400&h=400&fit=crop&crop=face",
+      image: "/assets/credit_images/pooja.jpg",
       primaryColor: "#6366F1",
       bgColor: "#E0E7FF",
       textColor: "#4338CA",
       description: "Building robust backend systems and APIs that ensure Greetin's AI generation works seamlessly and reliably for millions of users."
     },
     {
-      name: "Lisa Thompson",
+      name: "Sanjitha Sampath",
       role: "Customer Success",
       department: "User Experience Expert",
       specialty: "💝 User Support",
-      image: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=400&h=400&fit=crop&crop=face",
+      image: "/assets/credit_images/sanjitha.jpg",
       primaryColor: "#EA580C",
       bgColor: "#FED7AA",
       textColor: "#C2410C",
       description: "Ensuring every user has a smooth, joyful experience with Greetin, providing support and continuously improving the platform."
-    }
+    },
+  
+     {
+      name: "Rushikesh",
+      role: "Customer Success",
+      department: "User Experience Expert",
+      specialty: "💝 User Support",
+      image: "",
+      primaryColor: "#EA580C",
+      bgColor: "#FED7AA",
+      textColor: "#C2410C",
+      description: "Ensuring every user has a smooth, joyful experience with Greetin, providing support and continuously improving the platform."
+    },
+
+     {
+      name: "Moin",
+      role: "Customer Success",
+      department: "User Experience Expert",
+      specialty: "💝 User Support",
+      image: "",
+      primaryColor: "#EA580C",
+      bgColor: "#FED7AA",
+      textColor: "#C2410C",
+      description: "Ensuring every user has a smooth, joyful experience with Greetin, providing support and continuously improving the platform."
+    },
+
+
+     {
+      name: "Dinesh",
+      role: "Customer Success",
+      department: "User Experience Expert",
+      specialty: "💝 User Support",
+      image: "",
+      primaryColor: "#EA580C",
+      bgColor: "#FED7AA",
+      textColor: "#C2410C",
+      description: "Ensuring every user has a smooth, joyful experience with Greetin, providing support and continuously improving the platform."
+    },
+
+
+     {
+      name: "Harsha CV",
+      role: "Customer Success",
+      department: "User Experience Expert",
+      specialty: "💝 User Support",
+      image: "",
+      primaryColor: "#EA580C",
+      bgColor: "#FED7AA",
+      textColor: "#C2410C",
+      description: "Ensuring every user has a smooth, joyful experience with Greetin, providing support and continuously improving the platform."
+    },
+
+
+     {
+      name: "Doosu Bere",
+      role: "Program Manager",
+      department: "User Experience Expert",
+      specialty: "💝 User Support",
+      image: "",
+      primaryColor: "#EA580C",
+      bgColor: "#FED7AA",
+      textColor: "#C2410C",
+      description: "Ensuring every user has a smooth, joyful experience with Greetin, providing support and continuously improving the platform."
+    },
+
+
+
+     {
+      name: "Micheal",
+      role: "Customer Success",
+      department: "User Experience Expert",
+      specialty: "💝 User Support",
+      image: "/assets/credit_images/sanjitha.jpg",
+      primaryColor: "#EA580C",
+      bgColor: "#FED7AA",
+      textColor: "#C2410C",
+      description: "Ensuring every user has a smooth, joyful experience with Greetin, providing support and continuously improving the platform."
+    },
+
+
+
+     {
+      name: "Pradeep",
+      role: "Customer Success",
+      department: "User Experience Expert",
+      specialty: "💝 User Support",
+      image: "/assets/credit_images/sanjitha.jpg",
+      primaryColor: "#EA580C",
+      bgColor: "#FED7AA",
+      textColor: "#C2410C",
+      description: "Ensuring every user has a smooth, joyful experience with Greetin, providing support and continuously improving the platform."
+    },
+
+
+
+     {
+      name: "Sanjitha Sampath",
+      role: "Customer Success",
+      department: "User Experience Expert",
+      specialty: "💝 User Support",
+      image: "/assets/credit_images/sanjitha.jpg",
+      primaryColor: "#EA580C",
+      bgColor: "#FED7AA",
+      textColor: "#C2410C",
+      description: "Ensuring every user has a smooth, joyful experience with Greetin, providing support and continuously improving the platform."
+    },
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
   ];
 
   // Auto-swipe functionality

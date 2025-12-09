@@ -1,4 +1,4 @@
-const BASE_URL = "http://localhost:8000"; // FastAPI backend URL
+const BASE_URL = "http://localhost:9000"; // FastAPI backend URL
 
 export async function apiRequest(endpoint, method = "GET", body = null, token = null) {
   const headers = {
