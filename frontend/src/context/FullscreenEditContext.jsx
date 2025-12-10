@@ -20,12 +20,25 @@ export const FullscreenEditProvider = ({ children }) => {
     setEditData(null);
   };
 
+  // Callback for when card is finalized in editor
+  const onFinalizeCard = (textPosition) => {
+    console.log("🎨 Card finalized with text position:", textPosition);
+    // Store the finalized position and trigger navigation to preview
+    if (editData?.onFinalizeCardFromEditor) {
+      editData.onFinalizeCardFromEditor({
+        ...editData,
+        finalTextPosition: textPosition
+      });
+    }
+  };
+
   return (
     <FullscreenEditContext.Provider value={{
       isFullscreenEdit,
       editData,
       enterFullscreenEdit,
-      exitFullscreenEdit
+      exitFullscreenEdit,
+      onFinalizeCard
     }}>
       {children}
     </FullscreenEditContext.Provider>

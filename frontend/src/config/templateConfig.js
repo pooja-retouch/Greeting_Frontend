@@ -80,6 +80,9 @@ export const clearTemplateCache = () => {
 export const getTemplatesByOccasion = async (occasion, forceRefresh = false) => {
   const occasion_key = occasion.toLowerCase().replace(/\s+/g, '');
 
+  // Always force refresh to ensure we get fresh data
+  forceRefresh = true;  // Force refresh to avoid cache issues
+
   // Check cache first (unless forcing refresh)
   if (!forceRefresh && templateCache.has(occasion)) {
     return templateCache.get(occasion);
@@ -91,6 +94,10 @@ export const getTemplatesByOccasion = async (occasion, forceRefresh = false) => 
 
     if (response && response.templates) {
       console.log(`✅ Found ${response.templates.length} templates for ${occasion}`);
+    console.log("🎄 All templates returned:");
+    response.templates.forEach((t, i) =>
+      console.log(`   ${i+1}. ${t.title} (ID: ${t.id}, URL: ${t.img.substring(0,60)}...)`)
+    );
 
       // Enhance templates with default styling and properties
       const enhancedTemplates = response.templates.map(template => ({

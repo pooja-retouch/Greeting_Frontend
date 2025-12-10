@@ -9,6 +9,7 @@ export default function StepTemplate({
   message,
   occasion = "New Year",
   sender,
+  recipients,
 }) {
   const [previewTemplate, setPreviewTemplate] = useState(null);
   const [templates, setTemplates] = useState([]);
@@ -38,8 +39,9 @@ export default function StepTemplate({
   }, [occasion]);
 
   // Debug logging
-  console.log("🎨 Available templates for", occasion, ":", templates.length, "templates");
-  console.log("🎨 Template list:", templates.map(t => t.title));
+      console.log("🎨 Available templates for", occasion, ":", templates.length, "templates");
+      console.log("🎨 Template URLs:", templates.map(t => t.img));
+      console.log("🎨 Template IDs:", templates.map(t => t.id));
 
   const TemplatePreview = ({ templateImg, isSelected }) => (
     <div className="relative rounded-lg overflow-hidden cursor-pointer hover:scale-105 transition-transform">
@@ -76,6 +78,9 @@ export default function StepTemplate({
           🎄 Showing templates for: <span className="text-[#001B5E] font-bold">{occasion}</span>
           <span className="text-sm text-slate-500 ml-2">({templates.length} available)</span>
         </p>
+        <p className="text-sm text-slate-600 mt-1">
+          💡 Click any template to select it, then click "Start Editing" to customize
+        </p>
       </div>
 
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 mt-8">
@@ -97,7 +102,10 @@ export default function StepTemplate({
                   ? "border-[#002D89] shadow-md"
                   : "border-blue-200"
               }`}
-              onClick={() => setPreviewTemplate(t)} // Open preview modal instead of selecting
+              onClick={() => {
+                setSelectedTemplate(t.id);
+                setPreviewTemplate(t);
+              }} // Direct selection + preview modal
             >
               <TemplatePreview
                 templateImg={t.img}
@@ -175,12 +183,23 @@ export default function StepTemplate({
           onClick={() => {
             if (selectedTemplate) {
               const selectedTemplateData = templates.find(t => t.id === selectedTemplate);
+              console.log("🎨 Starting edit with template:", selectedTemplateData);
+              const handleFinalizeCardFromEditor = (finalizedData) => {
+                // Close fullscreen mode and trigger navigation to card preview
+                // We'll use a timeout to ensure the fullscreen exit happens first
+                setTimeout(() => {
+                  window.location.hash = '#step7'; // Trigger app-level navigation
+                  // Or you could use a state update mechanism here
+                }, 100);
+              };
+
               enterFullscreenEdit({
                 selectedTemplate: selectedTemplateData,
                 message,
                 occasion,
                 sender,
-                // Add other data needed for editing
+                recipients,
+                onFinalizeCardFromEditor: handleFinalizeCardFromEditor,
               });
             }
           }}

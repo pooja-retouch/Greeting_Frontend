@@ -7,20 +7,55 @@ export default function InteractiveTemplateEditor({
   selectedTemplate,
   message,
   sender,
-  occasion,
-  onPositionUpdate,
-  onCardGenerated
+  recipients,
+  occasion
 }) {
-  const [templateInfo, setTemplateInfo] = useState(null);
+  console.log("🎨 InteractiveTemplateEditor received selectedTemplate:", selectedTemplate);
 
-  // Load template config with force refresh to get latest URL
+  const [templateInfo, setTemplateInfo] = useState(selectedTemplate); // Use directly from props first
+  const [actualImageDimensions, setActualImageDimensions] = useState({ width: 600, height: 400 });
+  const [displayImageDimensions, setDisplayImageDimensions] = useState({ width: 600, height: 400 });
+
+  // Load template config and get actual image dimensions
   useEffect(() => {
+    console.log("🎨 Loading template config for:", occasion, selectedTemplate?.id);
     const loadTemplate = async () => {
-      const config = await getTemplateConfig(occasion, selectedTemplate);
+      const config = await getTemplateConfig(occasion, selectedTemplate?.id || selectedTemplate);
+      console.log("🎨 Loaded template config:", config);
+
+      // Get actual image dimensions
+      if (config?.img) {
+        try {
+          const img = new Image();
+          img.onload = () => {
+            setActualImageDimensions({ width: img.naturalWidth, height: img.naturalHeight });
+            console.log("🎯 Actual image dimensions:", img.naturalWidth, "x", img.naturalHeight);
+          };
+          img.src = config.img;
+        } catch (e) {
+          console.log("Could not get image dimensions:", e);
+        }
+      }
+
       setTemplateInfo(config);
     };
     loadTemplate();
   }, [occasion, selectedTemplate]);
+
+  // Update display dimensions when image loads
+  const handleImageLoad = (e) => {
+    const rect = e.target.getBoundingClientRect();
+    const displayWidth = rect.width;
+    const displayHeight = rect.height;
+
+    setDisplayImageDimensions({ width: displayWidth, height: displayHeight });
+
+    const scaleX = actualImageDimensions.width / displayWidth;
+    const scaleY = actualImageDimensions.height / displayHeight;
+
+    console.log("🎨 Display dimensions:", displayWidth, "x", displayHeight);
+    console.log("🎯 Scaling factors:", scaleX.toFixed(2), "x", scaleY.toFixed(2));
+  };
   const containerRef = useRef(null);
   const { exitFullscreenEdit } = useFullscreenEdit();
 
@@ -38,8 +73,6 @@ export default function InteractiveTemplateEditor({
     align: 'center',
     color: '#FFD700'
   });
-
-
 
   const [isDragging, setIsDragging] = useState(false);
   const [dragStart, setDragStart] = useState({ x: 0, y: 0 });
@@ -74,8 +107,7 @@ export default function InteractiveTemplateEditor({
     };
 
     setTextPosition(newPosition);
-    onPositionUpdate?.(newPosition);
-  }, [isDragging, dragStart, textPosition, onPositionUpdate]);
+  }, [isDragging, dragStart, textPosition]);
 
   const handleMouseUp = useCallback(() => {
     setIsDragging(false);
@@ -89,28 +121,60 @@ export default function InteractiveTemplateEditor({
 
 
 
-  // Generate final card with custom positioning
-  const generateCustomCard = async () => {
+  // Send final customized card via email
+  const sendFinalCard = async () => {
     setIsLoading(true);
     try {
+      // Use first recipient from the list (assuming single recipient for custom cards)
+      const recipient = recipients?.[0] || {};
+
+      if (!recipient.email) {
+        throw new Error("Recipient email is required");
+      }
+
+      // SCALE COORDINATES: Convert from display coordinates to actual image coordinates
+      const scaleX = actualImageDimensions.width / displayImageDimensions.width;
+      const scaleY = actualImageDimensions.height / displayImageDimensions.height;
+
+      // Average scale factor (assuming similar aspect ratio scaling)
+      const avgScale = (scaleX + scaleY) / 2;
+
+      const scaledTextPosition = {
+        ...textPosition,
+        x: Math.round(textPosition.x * scaleX),
+        y: Math.round(textPosition.y * scaleY),
+        width: Math.round(textPosition.width * scaleX),
+        height: Math.round(textPosition.height * scaleY),
+        // Font size scaling based on display scale
+        fontSize: Math.round(textPosition.fontSize * avgScale)
+      };
+
+      console.log("🎨 DISPLAY COORDS:", textPosition);
+      console.log("🎯 ACTUAL IMAGE DIMENSIONS:", actualImageDimensions);
+      console.log("📐 DISPLAY DIMENSIONS:", displayImageDimensions);
+      console.log("🔄 SCALING FACTORS:", scaleX.toFixed(2), "x", scaleY.toFixed(2));
+      console.log("📍 SCALED COORDS FOR BACKEND:", scaledTextPosition);
+
       await sendGreeting(
-        sender.name,           // sender_name
-        sender.email,          // sender_email
-        "recipient@example.com", // recipient_email (demo)
-        "Recipient",           // recipient_name (demo)
-        occasion,              // occasion
-        "Warm",                // tone
-        "Custom greeting",     // details
-        templateInfo.pngName,  // template
-        message,               // message
-        textPosition           // message_position (custom positioning)
+        sender.name,                  // sender_name
+        sender.email,                 // sender_email
+        recipient.email,              // recipient_email (no fallback - required)
+        recipient.name || "Recipient", // recipient_name
+        occasion,                     // occasion
+        "Warm",                       // tone (can be customized later if needed)
+        "Custom greeting",            // details
+        templateInfo.pngName,         // template
+        message,                      // message
+        scaledTextPosition            // SCALED message_position for Pillow!
       );
 
       setIsEditing(false);
-      onCardGenerated?.(true);
+      alert("🎉 Greeting card sent successfully!");
+      exitFullscreenEdit();
+      window.location.reload(); // Go back to beginning to create new card
     } catch (error) {
       console.error("Failed to send custom greeting:", error);
-      alert("Failed to generate custom card. Please try again.");
+      alert("Failed to send greeting card. Please try again.");
     } finally {
       setIsLoading(false);
     }
@@ -228,7 +292,11 @@ export default function InteractiveTemplateEditor({
       {/* Interactive Template Preview */}
       <div
         ref={containerRef}
-        className="relative rounded-2xl overflow-hidden shadow-2xl max-w-lg mx-auto cursor-move select-none"
+        className="relative rounded-2xl overflow-hidden shadow-2xl max-w-lg mx-auto"
+        style={isEditing ? {
+          cursor: isDragging ? 'grabbing' : 'grab',
+          userSelect: 'none'
+        } : {}}
         onMouseMove={handleMouseMove}
         onMouseUp={handleMouseUp}
         onMouseLeave={handleMouseUp}
@@ -252,17 +320,77 @@ export default function InteractiveTemplateEditor({
           </div>
         )}
 
-        {/* Interactive Message Box */}
+        {/* Interactive Message Box - Only show in EDIT mode */}
+        {isEditing && (
+          <div
+            className="absolute border-2 border-blue-500 bg-blue-100 bg-opacity-20"
+            style={{
+              left: textPosition.x,
+              top: textPosition.y,
+              width: textPosition.width,
+              height: textPosition.height,
+              cursor: isDragging ? 'grabbing' : 'grab',
+            }}
+            onMouseDown={handleMouseDown}
+          >
+            {/* Message Text */}
+            <div
+              className="w-full h-full flex items-center select-none"
+              style={{
+                justifyContent: textPosition.align === 'center' ? 'center' :
+                               textPosition.align === 'right' ? 'flex-end' : 'flex-start',
+                textAlign: textPosition.align
+              }}
+            >
+              <p
+                className="whitespace-pre-line break-words"
+                style={{
+                  fontSize: `${textPosition.fontSize}px`,
+                  fontFamily: textPosition.fontFamily || 'Arial, sans-serif',
+                  color: textPosition.color,
+                  textShadow: '2px 2px 4px rgba(0,0,0,0.5)',
+                  fontWeight: textPosition.fontWeight || 'bold',
+                  fontStyle: textPosition.fontStyle || 'normal',
+                  lineHeight: '1.1',
+                  maxWidth: '100%',
+                  overflow: 'hidden'
+                }}
+              >
+                {message || "Your custom message"}
+              </p>
+            </div>
+
+            {/* Corner resize handles */}
+            <div
+              className="absolute -bottom-1 -right-1 w-3 h-3 bg-blue-500 rounded cursor-se-resize"
+            />
+            <div
+              className="absolute -top-1 -left-1 w-3 h-3 bg-blue-500 rounded cursor-nw-resize"
+            />
+            <div
+              className="absolute -top-1 -right-1 w-3 h-3 bg-blue-500 rounded cursor-ne-resize"
+            />
+            <div
+              className="absolute -bottom-1 -left-1 w-3 h-3 bg-blue-500 rounded cursor-sw-resize"
+            />
+          </div>
+        )}
+
+        {/* Interactive Text Display - Show in both modes */}
         <div
-          className={`absolute border-2 ${isEditing ? 'border-blue-500 bg-blue-100 bg-opacity-20' : 'border-transparent'}`}
+          className={`absolute ${isEditing ? '' : 'pointer-events-none'}`} // Disable pointer events in preview
           style={{
             left: textPosition.x,
             top: textPosition.y,
             width: textPosition.width,
             height: textPosition.height,
-            cursor: isEditing ? (isDragging ? 'grabbing' : 'grab') : 'default',
+            ...(isEditing ? {
+              border: '2px solid #3b82f6',
+              backgroundColor: 'rgba(147, 197, 253, 0.2)',
+              cursor: isDragging ? 'grabbing' : 'grab',
+            } : {})
           }}
-          onMouseDown={isEditing ? handleMouseDown : undefined}
+          {...(isEditing ? { onMouseDown: handleMouseDown } : {})}
         >
           {/* Message Text */}
           <div
@@ -291,35 +419,13 @@ export default function InteractiveTemplateEditor({
             </p>
           </div>
 
-          {/* Resize handles (only in edit mode) */}
+          {/* Corner resize handles - Only in edit mode */}
           {isEditing && (
             <>
-              {/* Corner resize handles */}
-              <div
-                className="absolute -bottom-1 -right-1 w-3 h-3 bg-blue-500 rounded cursor-se-resize"
-                onMouseDown={(e) => {
-                  // Implement resize logic
-                  e.stopPropagation();
-                }}
-              />
-              <div
-                className="absolute -top-1 -left-1 w-3 h-3 bg-blue-500 rounded cursor-nw-resize"
-                onMouseDown={(e) => {
-                  e.stopPropagation();
-                }}
-              />
-              <div
-                className="absolute -top-1 -right-1 w-3 h-3 bg-blue-500 rounded cursor-ne-resize"
-                onMouseDown={(e) => {
-                  e.stopPropagation();
-                }}
-              />
-              <div
-                className="absolute -bottom-1 -left-1 w-3 h-3 bg-blue-500 rounded cursor-sw-resize"
-                onMouseDown={(e) => {
-                  e.stopPropagation();
-                }}
-              />
+              <div className="absolute -bottom-1 -right-1 w-3 h-3 bg-blue-500 rounded cursor-se-resize" />
+              <div className="absolute -top-1 -left-1 w-3 h-3 bg-blue-500 rounded cursor-nw-resize" />
+              <div className="absolute -top-1 -right-1 w-3 h-3 bg-blue-500 rounded cursor-ne-resize" />
+              <div className="absolute -bottom-1 -left-1 w-3 h-3 bg-blue-500 rounded cursor-sw-resize" />
             </>
           )}
         </div>
@@ -330,6 +436,13 @@ export default function InteractiveTemplateEditor({
             ✏️ Edit Mode - Drag to reposition
           </div>
         )}
+
+        {/* Preview Mode Indicator */}
+        {!isEditing && (
+          <div className="absolute top-2 left-2 bg-green-600 text-white px-2 py-1 rounded text-xs font-medium">
+            👁️ Preview Mode - Final result
+          </div>
+        )}
       </div>
 
       {/* Action Buttons */}
@@ -338,35 +451,63 @@ export default function InteractiveTemplateEditor({
           <>
             <button
               onClick={() => setIsEditing(false)}
-              className="px-6 py-2 bg-gray-500 text-white rounded-lg hover:bg-gray-600 transition"
+              className="px-6 py-3 bg-blue-600 text-white rounded-xl hover:bg-blue-700 transition font-semibold shadow-md"
             >
-              Preview Mode
-            </button>
-            <button
-              onClick={generateCustomCard}
-              disabled={isLoading}
-              className="px-6 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition disabled:opacity-50"
-            >
-              {isLoading ? "🎨 Generating..." : "✅ Finalize Card"}
+              👁️ Preview Final Card
             </button>
           </>
         ) : (
           <>
             <button
               onClick={() => setIsEditing(true)}
-              className="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition"
+              className="px-6 py-3 bg-gray-600 text-white rounded-xl hover:bg-gray-700 transition font-semibold"
             >
-              ✏️ Edit Position
+              ✏️ Back to Edit
             </button>
             <button
-              onClick={() => window.location.reload()}
-              className="px-6 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition"
+              onClick={sendFinalCard}
+              disabled={isLoading}
+              className={`px-8 py-3 rounded-xl text-white font-semibold shadow-lg transition ${
+                isLoading
+                  ? "bg-slate-300 cursor-not-allowed"
+                  : "bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700"
+              }`}
             >
-              🎯 Create New Card
+              {isLoading ? (
+                <>
+                  <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white inline-block mr-2"></div>
+                  Sending Card...
+                </>
+              ) : (
+                <>
+                  📧 Send Greeting Card
+                </>
+              )}
             </button>
           </>
         )}
       </div>
+
+      {/* Preview Instructions */}
+      {isEditing && (
+        <div className="mt-6 p-4 bg-blue-50 border border-blue-200 rounded-lg text-center">
+          <h4 className="font-semibold text-blue-800 mb-2">✨ Editing Mode Active</h4>
+          <p className="text-sm text-blue-700">
+            Drag the message box to reposition text, use controls above to customize fonts and colors.
+            Click "Preview Final Card" when ready to see how it will look!
+          </p>
+        </div>
+      )}
+
+      {!isEditing && (
+        <div className="mt-6 p-4 bg-green-50 border border-green-200 rounded-lg text-center">
+          <h4 className="font-semibold text-green-800 mb-2">🎨 Preview Mode</h4>
+          <p className="text-sm text-green-700">
+            This is exactly how your greeting card will appear in the email. Click "Send Greeting Card"
+            to deliver it to your recipient!
+          </p>
+        </div>
+      )}
 
       {/* Help Text */}
       <div className="text-center text-sm text-gray-500 max-w-md mx-auto">

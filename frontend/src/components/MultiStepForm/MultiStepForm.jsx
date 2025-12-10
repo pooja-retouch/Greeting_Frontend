@@ -5,6 +5,7 @@ import StepToneOccasion from "./StepToneOccasion";
 import StepGenerating from "./StepGenerating";
 import StepEditMessage from "./StepEditMessage";
 import StepTemplate from "./StepTemplate";
+import StepCardPreview from "./StepCardPreview";
 
 export default function MultiStepForm() {
   const [step, setStep] = useState(1); // Start from Step 1 (Sender)
@@ -13,6 +14,7 @@ export default function MultiStepForm() {
   const [recipients, setRecipients] = useState([{ name: "", email: "" }]);
   const [tone, setTone] = useState("Warm");
   const [occasion, setOccasion] = useState("New Year");
+  const [description, setDescription] = useState("");
   const [generatedMessage, setGeneratedMessage] = useState("");
   const [selectedTemplate, setSelectedTemplate] = useState(null);
 
@@ -43,6 +45,8 @@ export default function MultiStepForm() {
           setTone={setTone}
           occasion={occasion}
           setOccasion={setOccasion}
+          description={description}
+          setDescription={setDescription}
           messageType={messageType}
           recipients={recipients}
           setGeneratedMessage={setGeneratedMessage}
@@ -78,6 +82,19 @@ export default function MultiStepForm() {
           message={generatedMessage}
           occasion={occasion}
           sender={sender}
+          recipients={recipients}
+        />
+      )}
+
+      {step === 7 && (
+        <StepCardPreview
+          sender={sender}
+          recipients={recipients}
+          message={generatedMessage}
+          occasion={occasion}
+          tone={tone}
+          selectedTemplate={selectedTemplate}
+          onBack={() => setStep(6)}
         />
       )}
     </div>
