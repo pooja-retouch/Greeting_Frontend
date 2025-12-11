@@ -12,24 +12,14 @@ export default function About() {
       name: "Doosu Bere",
       role: "Program Manager",
       
-      image: "",
+      image: "/assets/credit_images/doosu.jpg",
       primaryColor: "#EA580C",
       bgColor: "#FED7AA",
       textColor: "#C2410C",
       description: "Ensuring every user has a smooth, joyful experience with Greetin, providing support and continuously improving the platform."
     },
 
-    {
-      name: "Gautam Nair",
-      role: "",
-      department: "AI & Lead developer",
-      
-      image: "/assets/credit_images/gautam.jpg",
-      primaryColor: "#3B82F6",
-      bgColor: "#DBEAFE",
-      textColor: "#1E40AF",
-      description: "Created groundbreaking AI-powered greeting card technology and leads the technical vision behind Greetin's innovative platform."
-    },
+     
 
     {
       name: "Micheal",
@@ -99,7 +89,7 @@ export default function About() {
       name: "Rushikesh",
       role: "Frontend Team",
       
-      image: "/assets/credit_images/rushi.jpg",
+      image: "/assets/credit_images/rushi_1.jpg",
       primaryColor: "#EA580C",
       bgColor: "#FED7AA",
       textColor: "#C2410C",
@@ -138,6 +128,17 @@ export default function About() {
       bgColor: "#FED7AA",
       textColor: "#C2410C",
       description: "Ensuring every user has a smooth, joyful experience with Greetin, providing support and continuously improving the platform."
+    },
+
+    {
+      name: "Ramu",
+      role: "Backend Team",
+      
+      image: "/assets/credit_images/ramu.jpg",
+      primaryColor: "#8B5CF6",
+      bgColor: "#E9D5FF",
+      textColor: "#7C3AED",
+      description: "Passionate about creating beautiful, intuitive interfaces that make greeting card creation a delightful experience for all users."
     },
 
      {

@@ -118,6 +118,10 @@ export default function Landing() {
               </p>
               <p className="text-lg font-semibold text-green-700 flex items-center gap-2 mt-2">
                 <span className="text-xl">✓</span>
+                Just 2 minutes to send your greeting card
+              </p>
+              <p className="text-lg font-semibold text-green-700 flex items-center gap-2 mt-2">
+                <span className="text-xl">✓</span>
                 Professional card creation with signature
               </p>
             </div>
