@@ -2,13 +2,56 @@ import React from "react";
 
 export default function PrivacyPolicy() {
   return (
-    <div className="min-h-screen bg-gradient-to-br from-[#E3F2FF] via-[#F0F7FF] to-[#E3F2FF]">
-      <div className="max-w-4xl mx-auto px-6 py-12">
-        <h1 className="text-4xl font-bold text-slate-900 mb-8">Privacy Policy</h1>
+    <div className="min-h-screen bg-gradient-to-br from-[#E3F2FF] via-[#F0F7FF] to-[#E3F2FF] relative overflow-hidden">
+      {/* Animated SVG Background Elements */}
+      <div className="absolute inset-0 overflow-hidden pointer-events-none">
+        {/* Floating Shield SVGs */}
+        <svg className="absolute top-20 left-20 w-20 h-20 text-blue-400 opacity-15 animate-pulse" style={{animationDelay: '0s', animationDuration: '4s'}} fill="currentColor" viewBox="0 0 24 24">
+          <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+        </svg>
 
-        <div className="bg-white/80 backdrop-blur-sm rounded-2xl shadow-lg p-8 border border-blue-200">
+        {/* Lock SVG */}
+        <svg className="absolute top-1/4 right-16 w-16 h-16 text-green-500 opacity-20 animate-bounce" style={{animationDelay: '1s'}} fill="none" stroke="currentColor" strokeWidth="1.5" viewBox="0 0 24 24">
+          <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
+          <circle cx="12" cy="16" r="1"/>
+          <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+        </svg>
+
+        {/* Eye SVG */}
+        <svg className="absolute bottom-1/4 left-16 w-18 h-18 text-purple-400 opacity-18 animate-pulse" style={{animationDelay: '2s'}} fill="none" stroke="currentColor" strokeWidth="1.5" viewBox="0 0 24 24">
+          <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+          <circle cx="12" cy="12" r="3"/>
+        </svg>
+
+        {/* Checkmark SVG */}
+        <svg className="absolute bottom-1/3 right-20 w-14 h-14 text-green-400 opacity-25 animate-ping" style={{animationDelay: '3s', animationDuration: '3s'}} fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+          <polyline points="20,6 9,17 4,12"/>
+        </svg>
+
+        {/* Data Protection Shield */}
+        <svg className="absolute top-3/4 left-1/3 w-24 h-24 text-indigo-400 opacity-15 animate-spin" style={{animationDuration: '10s'}} fill="currentColor" viewBox="0 0 24 24">
+          <path d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/>
+        </svg>
+
+        {/* Privacy Wave */}
+        <svg className="absolute bottom-10 right-1/4 w-32 h-16 text-blue-300 opacity-10 animate-pulse" style={{animationDelay: '4s'}} viewBox="0 0 400 100">
+          <path d="M0,60 Q50,30 100,60 T200,60 Q250,80 300,60 T400,60 V100 H0 Z" fill="currentColor"/>
+        </svg>
+      </div>
+
+      {/* Background Pattern */}
+      <div className="absolute inset-0 opacity-30" style={{
+        backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23000000' fill-opacity='0.03'%3E%3Ccircle cx='30' cy='30' r='2'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`
+      }}></div>
+
+      <div className="max-w-4xl mx-auto px-6 py-12 relative z-10">
+        <div className="animate-in fade-in duration-700">
+          <h1 className="text-4xl font-bold text-slate-900 mb-8 animate-in slide-in-from-top duration-500">Privacy Policy</h1>
+        </div>
+
+        <div className="bg-white/80 backdrop-blur-sm rounded-2xl shadow-lg p-8 border border-blue-200 hover:shadow-2xl transition-all duration-500">
           {/* Key Privacy Promise */}
-          <div className="mb-8 p-6 bg-gradient-to-r from-green-50 to-blue-50 rounded-xl border border-green-200">
+          <div className="mb-8 p-6 bg-gradient-to-r from-green-50 to-blue-50 rounded-xl border border-green-200 animate-in slide-in-from-bottom duration-500 delay-100 hover:shadow-lg transition-shadow duration-300">
             <div className="flex items-center gap-3 mb-3">
               <div className="w-10 h-10 bg-green-500 rounded-full flex items-center justify-center">
                 <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -17,9 +60,24 @@ export default function PrivacyPolicy() {
               </div>
               <h2 className="text-xl font-bold text-green-800">Your Privacy is Protected</h2>
             </div>
-            <p className="text-lg text-green-700">
+            <p className="text-lg text-green-700 mb-4">
               <strong>Important:</strong> Greetin processes your greeting cards entirely in memory and never saves your templates, messages, or personal information. Everything is generated and forgotten immediately.
             </p>
+
+            <div className="grid md:grid-cols-3 gap-4 text-center text-sm">
+              <div className="p-3 bg-white rounded-lg border border-green-300">
+                <div className="text-green-600 font-bold">🚫 NO TEMPLATES SAVED</div>
+                <div className="text-green-700">Your customizations exist only in memory</div>
+              </div>
+              <div className="p-3 bg-white rounded-lg border border-green-300">
+                <div className="text-green-600 font-bold">🚫 NO MESSAGES SAVED</div>
+                <div className="text-green-700">Personal messages vanish after sending</div>
+              </div>
+              <div className="p-3 bg-white rounded-lg border border-green-300">
+                <div className="text-green-600 font-bold">🚫 NO DATA STORED</div>
+                <div className="text-green-700">Complete privacy with zero retention</div>
+              </div>
+            </div>
           </div>
 
           <div className="space-y-8">

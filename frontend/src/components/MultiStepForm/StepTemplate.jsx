@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { getTemplatesByOccasion } from "../../config/templateConfig";
-import { useFullscreenEdit } from "../../context/FullscreenEditContext";
+import { sendGreeting } from "../../api/apiClient";
 
 export default function StepTemplate({
   selectedTemplate,
@@ -10,13 +10,57 @@ export default function StepTemplate({
   occasion = "New Year",
   sender,
   recipients,
+  tone,
+  description,
 }) {
   const [previewTemplate, setPreviewTemplate] = useState(null);
   const [templates, setTemplates] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
-  const { enterFullscreenEdit } = useFullscreenEdit();
+  const [isSending, setIsSending] = useState(false);
 
   console.log("🎨 StepTemplate rendered with message:", message, "occasion:", occasion);
+
+  // Send card directly without editing
+  const sendCard = async () => {
+    if (!selectedTemplate || !sender?.email || !recipients?.length) {
+      alert("Please select a template and ensure sender/recipient details are complete.");
+      return;
+    }
+
+    setIsSending(true);
+    try {
+      const selectedTemplateData = templates.find(t => t.id === selectedTemplate);
+      const recipient = recipients[0]; // Send to first recipient for simplicity
+
+      console.log("📧 Sending card directly:");
+      console.log("From:", sender);
+      console.log("To:", recipient);
+      console.log("Template:", selectedTemplateData.pngName);
+      console.log("Message:", message);
+
+      await sendGreeting(
+        sender.name,
+        sender.email,
+        recipient.email,
+        recipient.name || "Recipient",
+        occasion,
+        tone || "Warm",
+        description || '', // Context details without prefix
+        selectedTemplateData.pngName,
+        message,
+        null // No custom positioning
+      );
+
+      alert("🎉 Greeting card sent successfully!");
+      // Reset or navigate back to start
+      window.location.reload();
+    } catch (error) {
+      console.error("Failed to send card:", error);
+      alert("Failed to send greeting card. Please try again.");
+    } finally {
+      setIsSending(false);
+    }
+  };
 
   // Load templates for the selected occasion
   useEffect(() => {
@@ -79,7 +123,7 @@ export default function StepTemplate({
           <span className="text-sm text-slate-500 ml-2">({templates.length} available)</span>
         </p>
         <p className="text-sm text-slate-600 mt-1">
-          💡 Click any template to select it, then click "Start Editing" to customize
+          💡 Click any template to select it, then click "Send Card" to email your greeting
         </p>
       </div>
 
@@ -179,37 +223,15 @@ export default function StepTemplate({
         </button>
 
         <button
-          disabled={!selectedTemplate}
-          onClick={() => {
-            if (selectedTemplate) {
-              const selectedTemplateData = templates.find(t => t.id === selectedTemplate);
-              console.log("🎨 Starting edit with template:", selectedTemplateData);
-              const handleFinalizeCardFromEditor = (finalizedData) => {
-                // Close fullscreen mode and trigger navigation to card preview
-                // We'll use a timeout to ensure the fullscreen exit happens first
-                setTimeout(() => {
-                  window.location.hash = '#step7'; // Trigger app-level navigation
-                  // Or you could use a state update mechanism here
-                }, 100);
-              };
-
-              enterFullscreenEdit({
-                selectedTemplate: selectedTemplateData,
-                message,
-                occasion,
-                sender,
-                recipients,
-                onFinalizeCardFromEditor: handleFinalizeCardFromEditor,
-              });
-            }
-          }}
+          disabled={!selectedTemplate || isSending}
+          onClick={sendCard}
           className={`px-6 py-3 rounded-xl text-white font-semibold shadow-md transition ${
-            selectedTemplate
-              ? "bg-gradient-to-r from-[#000F3A] via-[#001B5E] to-[#002D89] hover:opacity-90"
+            selectedTemplate && !isSending
+              ? "bg-gradient-to-r from-green-600 to-green-700 hover:opacity-90"
               : "bg-slate-300 cursor-not-allowed"
           }`}
         >
-          Start Editing 🎨
+          {isSending ? "Sending..." : "Send Card 📧"}
         </button>
       </div>
     </div>

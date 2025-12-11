@@ -104,7 +104,7 @@ export default function Footer() {
         </div>
 
         {/* Bottom Section */}
-        <div className="border-t border-gray-800 pt-6">
+        <div className="border-t border-gray-800 pt-6 animate-in fade-in duration-500 delay-200">
           <div className="flex flex-col md:flex-row justify-between items-center gap-4">
             <div className="text-center md:text-left">
               <p className="text-gray-400 text-sm">

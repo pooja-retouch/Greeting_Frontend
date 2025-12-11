@@ -85,3 +85,10 @@ export async function sendGreeting(senderName, senderEmail, recipientEmail, reci
     message_position,
   });
 }
+
+/**
+ * Submit contact form
+ */
+export async function submitContactForm(contactData) {
+  return apiRequest("/ai/contact", "POST", contactData);
+}

@@ -22,24 +22,26 @@ function AppContent() {
   const { editData, exitFullscreenEdit, isFullscreenEdit } = useFullscreenEdit();
 
   return (
-    <div className="flex flex-col min-h-screen">
+    <div className="flex flex-col min-h-screen animate-in fade-in duration-500">
       <Navbar />
 
       {isFullscreenEdit ? (
-        <InteractiveTemplateEditor
-          selectedTemplate={editData?.selectedTemplate}
-          message={editData?.message}
-          sender={editData?.sender}
-          recipients={editData?.recipients}
-          occasion={editData?.occasion}
-          onPositionUpdate={editData?.onPositionUpdate}
-          onCardGenerated={(success) => {
-            if (success) {
-              exitFullscreenEdit();
-              // Optionally call editData?.onCardGenerated?.(success);
-            }
-          }}
-        />
+        <div className="animate-in slide-in-from-right duration-300">
+          <InteractiveTemplateEditor
+            selectedTemplate={editData?.selectedTemplate}
+            message={editData?.message}
+            sender={editData?.sender}
+            recipients={editData?.recipients}
+            occasion={editData?.occasion}
+            onPositionUpdate={editData?.onPositionUpdate}
+            onCardGenerated={(success) => {
+              if (success) {
+                exitFullscreenEdit();
+                // Optionally call editData?.onCardGenerated?.(success);
+              }
+            }}
+          />
+        </div>
       ) : (
         <main className="flex-grow">
           <Routes>

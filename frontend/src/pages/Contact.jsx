@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
+import { submitContactForm } from "../api/apiClient";
 
 export default function Contact() {
   const [formData, setFormData] = useState({
@@ -19,19 +20,27 @@ export default function Contact() {
     }));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     setIsSubmitting(true);
-    
-    // Simulate form submission
-    setTimeout(() => {
+
+    try {
+      console.log("Submitting contact form:", formData);
+      const response = await submitContactForm(formData);
+      console.log("Contact form submitted successfully:", response);
+
       setIsSubmitting(false);
       setSubmitSuccess(true);
       setFormData({ name: "", email: "", subject: "", message: "" });
-      
+
       // Reset success message after 5 seconds
       setTimeout(() => setSubmitSuccess(false), 5000);
-    }, 1500);
+    } catch (error) {
+      console.error("Failed to submit contact form:", error);
+      setIsSubmitting(false);
+      // You might want to show an error message to the user here
+      alert("Failed to send message. Please try again.");
+    }
   };
 
   return (
@@ -121,85 +130,120 @@ export default function Contact() {
               </p>
               
               {submitSuccess && (
-                <div className="mb-6 p-4 bg-green-50 border border-green-200 rounded-xl">
+                <div className="mb-6 p-4 bg-green-50 border border-green-200 rounded-xl animate-bounce">
                   <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 bg-green-100 rounded-full flex items-center justify-center">
-                      <span className="text-green-600 text-xl">✓</span>
+                    <div className="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center animate-spin">
+                      <span className="text-green-600 text-2xl">🎉</span>
                     </div>
                     <div>
-                      <h3 className="font-bold text-green-800">Message Sent Successfully!</h3>
+                      <h3 className="font-bold text-green-800 animate-pulse">Message Sent Successfully! ✨</h3>
                       <p className="text-green-600 text-sm">Thank you for contacting us. We'll respond within 24 hours.</p>
                     </div>
+                  </div>
+                  <div className="mt-3 flex justify-center space-x-2">
+                    <span className="animate-bounce text-yellow-500" style={{ animationDelay: '0ms' }}>🎊</span>
+                    <span className="animate-bounce text-blue-500" style={{ animationDelay: '200ms' }}>⭐</span>
+                    <span className="animate-bounce text-red-500" style={{ animationDelay: '400ms' }}>🎁</span>
+                    <span className="animate-bounce text-purple-500" style={{ animationDelay: '600ms' }}>✨</span>
+                    <span className="animate-bounce text-pink-500" style={{ animationDelay: '800ms' }}>🎉</span>
                   </div>
                 </div>
               )}
               
               <form onSubmit={handleSubmit} className="space-y-6">
                 <div className="grid md:grid-cols-2 gap-6">
-                  <div>
-                    <label className="block text-sm font-medium text-slate-700 mb-2">
+                  <div className="relative group">
+                    <label className="block text-sm font-medium text-slate-700 mb-2 transform transition-all duration-200 group-focus-within:text-blue-600 group-focus-within:scale-105 origin-left animate-in slide-in-from-left duration-300 delay-100">
                       Your Name *
+                      <span className="inline-block ml-1 opacity-0 group-focus-within:opacity-100 animate-in zoom-in duration-300 delay-200">✏️</span>
                     </label>
-                    <input
-                      type="text"
-                      name="name"
-                      value={formData.name}
-                      onChange={handleChange}
-                      required
-                      className="w-full p-3 bg-white border border-blue-200 rounded-xl focus:ring-4 focus:ring-[#B8C2FF] outline-none"
-                      placeholder="Enter your name"
-                    />
+                    <div className="relative">
+                      <input
+                        type="text"
+                        name="name"
+                        value={formData.name}
+                        onChange={handleChange}
+                        required
+                        className="w-full p-3 bg-white border border-blue-200 rounded-xl focus:ring-4 focus:ring-[#B8C2FF] outline-none transition-all duration-300 focus:scale-[1.02] focus:shadow-xl focus:border-blue-400 group/input relative z-10"
+                        placeholder="Enter your name"
+                      />
+                      <div className="absolute inset-0 bg-gradient-to-r from-blue-400/10 to-purple-400/10 opacity-0 group-focus-within:opacity-100 transition-opacity duration-300 rounded-xl blur-sm"></div>
+                      <div className="absolute bottom-0 left-0 w-0 h-0.5 bg-gradient-to-r from-blue-500 to-purple-500 group-focus-within:w-full transition-all duration-500 rounded-full"></div>
+                    </div>
                   </div>
-                  
-                  <div>
-                    <label className="block text-sm font-medium text-slate-700 mb-2">
+
+                  <div className="relative group">
+                    <label className="block text-sm font-medium text-slate-700 mb-2 transform transition-all duration-200 group-focus-within:text-blue-600 group-focus-within:scale-105 origin-left animate-in slide-in-from-right duration-300 delay-200">
                       Your Email *
+                      <span className="inline-block ml-1 opacity-0 group-focus-within:opacity-100 animate-in zoom-in duration-300 delay-200">📧</span>
                     </label>
-                    <input
-                      type="email"
-                      name="email"
-                      value={formData.email}
-                      onChange={handleChange}
-                      required
-                      className="w-full p-3 bg-white border border-blue-200 rounded-xl focus:ring-4 focus:ring-[#B8C2FF] outline-none"
-                      placeholder="Enter your email"
-                    />
+                    <div className="relative">
+                      <input
+                        type="email"
+                        name="email"
+                        value={formData.email}
+                        onChange={handleChange}
+                        required
+                        className="w-full p-3 bg-white border border-blue-200 rounded-xl focus:ring-4 focus:ring-[#B8C2FF] outline-none transition-all duration-300 focus:scale-[1.02] focus:shadow-xl focus:border-blue-400 group/input relative z-10"
+                        placeholder="Enter your email"
+                      />
+                      <div className="absolute inset-0 bg-gradient-to-r from-blue-400/10 to-purple-400/10 opacity-0 group-focus-within:opacity-100 transition-opacity duration-300 rounded-xl blur-sm"></div>
+                      <div className="absolute bottom-0 left-0 w-0 h-0.5 bg-gradient-to-r from-blue-500 to-purple-500 group-focus-within:w-full transition-all duration-500 rounded-full"></div>
+                    </div>
                   </div>
                 </div>
-                
-                <div>
-                  <label className="block text-sm font-medium text-slate-700 mb-2">
+
+                <div className="relative group animate-in zoom-in duration-300 delay-300">
+                  <label className="block text-sm font-medium text-slate-700 mb-2 transform transition-all duration-200 group-focus-within:text-blue-600 group-focus-within:scale-105 origin-left">
                     Subject *
+                    <span className="inline-block ml-1 opacity-0 group-focus-within:opacity-100 animate-in bounce-in duration-300 delay-100">🎯</span>
                   </label>
-                  <select
-                    name="subject"
-                    value={formData.subject}
-                    onChange={handleChange}
-                    required
-                    className="w-full p-3 bg-white border border-blue-200 rounded-xl focus:ring-4 focus:ring-[#B8C2FF] outline-none"
-                  >
-                    <option value="">Select a subject</option>
-                    <option value="general">General Inquiry</option>
-                    <option value="support">Technical Support</option>
-                    <option value="feedback">Feedback & Suggestions</option>
-                    <option value="business">Business Inquiries</option>
-                    <option value="other">Other</option>
-                  </select>
+                  <div className="relative">
+                    <select
+                      name="subject"
+                      value={formData.subject}
+                      onChange={handleChange}
+                      required
+                      className="w-full p-3 bg-white border border-blue-200 rounded-xl focus:ring-4 focus:ring-[#B8C2FF] outline-none transition-all duration-300 focus:scale-[1.02] focus:shadow-xl focus:border-blue-400 appearance-none cursor-pointer relative z-10 pr-10"
+                    >
+                      <option value="">Select a subject</option>
+                      <option value="general">General Inquiry</option>
+                      <option value="support">Technical Support</option>
+                      <option value="feedback">Feedback & Suggestions</option>
+                      <option value="business">Business Inquiries</option>
+                      <option value="other">Other</option>
+                    </select>
+                    <div className="absolute inset-0 bg-gradient-to-r from-blue-400/10 to-purple-400/10 opacity-0 group-focus-within:opacity-100 transition-opacity duration-300 rounded-xl blur-sm"></div>
+                    <div className="absolute right-3 top-1/2 transform -translate-y-1/2 pointer-events-none transition-transform duration-200 group-focus-within:rotate-180">
+                      <svg className="w-5 h-5 text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7"/>
+                      </svg>
+                    </div>
+                    <div className="absolute bottom-0 left-0 w-0 h-0.5 bg-gradient-to-r from-blue-500 to-purple-500 group-focus-within:w-full transition-all duration-500 rounded-full"></div>
+                  </div>
                 </div>
-                
-                <div>
-                  <label className="block text-sm font-medium text-slate-700 mb-2">
+
+                <div className="relative group animate-in slide-in-from-bottom duration-300 delay-400">
+                  <label className="block text-sm font-medium text-slate-700 mb-2 transform transition-all duration-200 group-focus-within:text-blue-600 group-focus-within:scale-105 origin-left">
                     Your Message *
+                    <span className="inline-block ml-1 opacity-0 group-focus-within:opacity-100 animate-in zoom-in duration-300 delay-200">💬</span>
                   </label>
-                  <textarea
-                    name="message"
-                    value={formData.message}
-                    onChange={handleChange}
-                    required
-                    rows="6"
-                    className="w-full p-3 bg-white border border-blue-200 rounded-xl focus:ring-4 focus:ring-[#B8C2FF] outline-none resize-none"
-                    placeholder="How can we help you?"
-                  />
+                  <div className="relative">
+                    <textarea
+                      name="message"
+                      value={formData.message}
+                      onChange={handleChange}
+                      required
+                      rows="6"
+                      className="w-full p-3 bg-white border border-blue-200 rounded-xl focus:ring-4 focus:ring-[#B8C2FF] outline-none resize-none transition-all duration-300 focus:scale-[1.02] focus:shadow-xl focus:border-blue-400 relative z-10"
+                      placeholder="How can we help you? Tell us what you're looking for..."
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-r from-blue-400/10 to-purple-400/10 opacity-0 group-focus-within:opacity-100 transition-opacity duration-300 rounded-xl blur-sm"></div>
+                    <div className="absolute bottom-0 left-0 w-0 h-0.5 bg-gradient-to-r from-blue-500 to-purple-500 group-focus-within:w-full transition-all duration-500 rounded-full"></div>
+                    <div className="absolute top-2 right-2 text-slate-400 text-sm opacity-0 group-focus-within:opacity-100 transition-opacity duration-300 delay-300">
+                      {formData.message.length}/500
+                    </div>
+                  </div>
                 </div>
                 
                 <div className="flex items-center gap-4">
