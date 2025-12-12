@@ -2,16 +2,7 @@ import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import MultiStepForm from '../components/MultiStepForm/MultiStepForm';
 import TestimonialsSlider from '../components/MultiStepForm/TestimonialsSlider';
-import BackgroundAnimations from '../components/BackgroundAnimations';
 import TeamCarousel from '../components/TeamCarousel';
-import BackgroundIntroAnimation from '../components/BackgroundIntroAnimation';
-import SimpleSnowEffect from '../components/SimpleSnowEffect';
-import ThreeDChristmasScene from '../components/ThreeDChristmasScene';
-import SnowEffect from '../components/Decorations/SnowEffect';
-import LightingElements from '../components/Decorations/LightingElements';
-import ChristmasTree from '../components/Decorations/ChristmasTree';
-import FloatingDecorations from '../components/Decorations/FloatingDecorations';
-import { animationKeyframes } from '../config/animationConfig';
 import { useMotionPreference } from '../hooks/useMotionPreference';
 
 export default function Landing() {
@@ -20,36 +11,11 @@ export default function Landing() {
 
   return (
     <>
-      {/* 5-Second Magical Christmas Intro Animation */}
-      <BackgroundIntroAnimation onComplete={() => console.log('Intro animation completed')} />
-
-      {/* Christmas Background Animations */}
-      <BackgroundAnimations />
-
-      {/* Snow Particles Falling */}
-      <SimpleSnowEffect />
-
-      {/* 3D Christmas Scene with Three.js */}
-      <ThreeDChristmasScene />
-
-      {/* Animation Keyframes */}
-      <style>{animationKeyframes}</style>
-
-      {/* Lighting Effects */}
-      <LightingElements />
-
-      {/* Christmas Tree Decoration */}
-      <ChristmasTree />
-
-      {/* Snow Effects */}
-      <SnowEffect />
-
-      {/* Floating Decorations */}
-      <FloatingDecorations />
+  
 
       {/* Main Content Container */}
       <div
-        className="min-h-screen relative animate-in fade-in duration-700 overflow-hidden"
+        className="bg-[url(assets/bg1.mp4)] min-h-screen relative animate-in fade-in duration-700 overflow-hidden"
         style={{
           background: `
             radial-gradient(ellipse 120% 80% at 50% 0%, rgba(30, 50, 100, 0.6) 0%, transparent 100%),
@@ -59,59 +25,7 @@ export default function Landing() {
           `,
         }}
       >
-        {/* Background Overlay */}
-        <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] opacity-5"></div>
-
-        {/* Floating Clouds */}
-        <div className="absolute top-4 left-0 right-0 h-32 pointer-events-none overflow-hidden z-10">
-          {/* Large cloud on the left */}
-          <div
-            className="absolute top-6 left-10 text-white opacity-30"
-            style={{
-              animation: 'floatCloud 25s ease-in-out infinite',
-            }}
-          >
-            <svg width="180" height="80" viewBox="0 0 180 80" fill="currentColor">
-              <path d="M60 40 Q30 30 20 50 Q5 55 15 70 Q25 80 50 75 Q80 80 100 70 Q130 65 140 55 Q160 40 140 25 Q120 10 90 15 Q60 10 30 20 Q10 25 10 40 Q20 45 40 40 Z"/>
-            </svg>
-          </div>
-
-          {/* Medium cloud in the center */}
-          <div
-            className="absolute top-8 right-1/4 text-white opacity-25"
-            style={{
-              animation: 'floatCloud 20s ease-in-out infinite 5s',
-            }}
-          >
-            <svg width="140" height="60" viewBox="0 0 140 60" fill="currentColor">
-              <path d="M45 25 Q25 20 15 35 Q8 40 15 50 Q20 55 40 52 Q60 55 75 50 Q95 45 98 35 Q105 20 85 18 Q65 10 45 15 Q25 15 15 25 Q12 35 25 30 Z"/>
-            </svg>
-          </div>
-
-          {/* Small cloud on the right */}
-          <div
-            className="absolute top-4 right-16 text-white opacity-20"
-            style={{
-              animation: 'floatCloud 30s ease-in-out infinite 10s',
-            }}
-          >
-            <svg width="100" height="50" viewBox="0 0 100 50" fill="currentColor">
-              <path d="M35 20 Q25 15 15 25 Q10 30 15 38 Q20 42 35 40 Q45 42 55 38 Q65 35 68 28 Q75 18 60 15 Q45 10 30 15 Q20 18 15 22 Q12 28 20 25 Z"/>
-            </svg>
-          </div>
-
-          {/* Extra small cloud left side */}
-          <div
-            className="absolute top-12 left-1/2 text-white opacity-15"
-            style={{
-              animation: 'floatCloud 35s ease-in-out infinite 15s',
-            }}
-          >
-            <svg width="80" height="40" viewBox="0 0 80 40" fill="currentColor">
-              <path d="M25 15 Q15 12 10 20 Q7 25 12 30 Q15 33 25 31 Q32 33 38 30 Q42 26 40 22 Q35 15 28 13 Q20 10 15 15 Q10 20 15 18 Z"/>
-            </svg>
-          </div>
-        </div>
+        
 
         {/* Moonlight Effect */}
         <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-yellow-200/20 to-transparent rounded-full blur-xl opacity-30"></div>
@@ -196,7 +110,7 @@ export default function Landing() {
               )}
 
               {/* Form Card - Main Focus */}
-              <div ref={formRef} className="bg-white/70 backdrop-blur-2xl rounded-3xl shadow-2xl p-8 border border-blue-200 animate-[fadeIn_1s_ease]">
+              <div className="bg-white/70 backdrop-blur-2xl rounded-3xl shadow-2xl p-8 border border-blue-200 animate-[fadeIn_1s_ease]">
                <div className="mb-4 text-center">
                  <span className="inline-block px-4 py-2 bg-gradient-to-r from-green-100 to-emerald-100 text-emerald-700 rounded-full font-semibold text-sm shadow-md">
                    🎁 Forever Free - No Payment Needed
