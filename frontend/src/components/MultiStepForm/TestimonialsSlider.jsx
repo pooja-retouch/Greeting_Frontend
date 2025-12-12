@@ -69,12 +69,6 @@ export default function TestimonialsSlider() {
 
   return (
     <div className="py-12">
-      <h2 className="text-4xl font-bold text-center text-slate-800 mb-4">
-        What Our Users Say
-      </h2>
-      <p className="text-xl text-center text-slate-600 mb-12">
-        Loved by thousands, completely free forever
-      </p>
 
       <div className="relative max-w-4xl mx-auto">
         <div className="overflow-hidden">

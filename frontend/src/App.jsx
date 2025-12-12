@@ -23,8 +23,6 @@ function AppContent() {
 
   return (
     <div className="flex flex-col min-h-screen animate-in fade-in duration-500">
-      <Navbar />
-
       {isFullscreenEdit ? (
         <div className="animate-in slide-in-from-right duration-300">
           <InteractiveTemplateEditor

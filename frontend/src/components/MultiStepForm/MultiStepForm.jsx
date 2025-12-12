@@ -1,6 +1,5 @@
 import React, { useState } from "react";
-import StepSender from "./StepSender";
-import StepRecipients from "./StepRecipients";
+import StepSenderRecipients from "./StepSenderRecipients";
 import StepToneOccasion from "./StepToneOccasion";
 import StepGenerating from "./StepGenerating";
 import StepEditMessage from "./StepEditMessage";
@@ -23,23 +22,16 @@ export default function MultiStepForm() {
   return (
     <div className="space-y-8">
       {step === 1 && (
-        <StepSender
+        <StepSenderRecipients
           sender={sender}
           setSender={setSender}
+          recipients={recipients}
+          setRecipients={setRecipients}
           onNext={() => setStep(2)}
         />
       )}
 
       {step === 2 && (
-        <StepRecipients
-          recipients={recipients}
-          setRecipients={setRecipients}
-          onNext={() => setStep(3)}
-          onBack={() => setStep(1)}
-        />
-      )}
-
-      {step === 3 && (
         <StepToneOccasion
           tone={tone}
           setTone={setTone}
@@ -50,35 +42,33 @@ export default function MultiStepForm() {
           messageType={messageType}
           recipients={recipients}
           setGeneratedMessage={setGeneratedMessage}
+          onNext={() => setStep(3)}
+        />
+      )}
+
+      {step === 3 && (
+        <StepGenerating
+          message={generatedMessage}
           onNext={() => setStep(4)}
-          onBack={() => setStep(2)}
         />
       )}
 
       {step === 4 && (
-        <StepGenerating
-          message={generatedMessage}
-          onNext={() => setStep(5)}
-        />
-      )}
-
-      {step === 5 && (
         <StepEditMessage
           message={generatedMessage}
           setMessage={setGeneratedMessage}
-          onNext={() => setStep(6)}
-          onBack={() => setStep(3)}
+          onNext={() => setStep(5)}
           tone={tone}
           occasion={occasion}
           messageType={messageType}
         />
       )}
 
-      {step === 6 && (
+      {step === 5 && (
         <StepTemplate
           selectedTemplate={selectedTemplate}
           setSelectedTemplate={setSelectedTemplate}
-          onBack={() => setStep(5)}
+          onBack={() => setStep(4)}
           message={generatedMessage}
           occasion={occasion}
           sender={sender}
@@ -86,7 +76,7 @@ export default function MultiStepForm() {
         />
       )}
 
-      {step === 7 && (
+      {step === 6 && (
         <StepCardPreview
           sender={sender}
           recipients={recipients}
@@ -94,7 +84,7 @@ export default function MultiStepForm() {
           occasion={occasion}
           tone={tone}
           selectedTemplate={selectedTemplate}
-          onBack={() => setStep(6)}
+          onBack={() => setStep(5)}
         />
       )}
     </div>
