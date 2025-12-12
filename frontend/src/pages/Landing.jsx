@@ -15,7 +15,7 @@ export default function Landing() {
 
       {/* Main Content Container */}
       <div
-        className="bg-[url(assets/bg1.mp4)] min-h-screen relative animate-in fade-in duration-700 overflow-hidden"
+        className="bg-[url(./assets/bg1.mp4)] min-h-screen relative animate-in fade-in duration-700 overflow-hidden"
         style={{
           background: `
             radial-gradient(ellipse 120% 80% at 50% 0%, rgba(30, 50, 100, 0.6) 0%, transparent 100%),
