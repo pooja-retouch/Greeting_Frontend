@@ -1,4 +1,4 @@
-import React, { useRef } from 'react';
+import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import MultiStepForm from '../components/MultiStepForm/MultiStepForm';
 import TestimonialsSlider from '../components/MultiStepForm/TestimonialsSlider';
@@ -123,15 +123,15 @@ export default function Landing() {
             {/* LEFT SIDE: HERO TEXT */}
             <div className="order-1 lg:order-1">
               <h1 className="text-5xl md:text-6xl font-bold leading-tight mb-6">
-                <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#FFD700] via-[#FFA500] to-[#FF6B6B]">
-                  Beautiful
+                <span className="text-transparent bg-clip-text text-white">
+                 Send Beautiful
                 </span>
                 <br />
-                <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#FF6B6B] via-[#FF4444] to-[#DC143C]">
+                <span className="text-transparent bg-clip-text text-white">
                   Greeting Cards
                 </span>
                 <br />
-                <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#00D4FF] via-[#0099FF] to-[#0066FF]">
+                <span className="text-transparent bg-clip-text text-white">
                   With AI-Powered Templates
                 </span>
               </h1>
